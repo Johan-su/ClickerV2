@@ -13,3 +13,6 @@ if not exist build mkdir build
 cd ./build
 %CLANG% ../src/main.cpp %FLAGS% %LIBS% -o Clickerv2.exe
 cd ..
+
+
+
