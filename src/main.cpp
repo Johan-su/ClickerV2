@@ -32,6 +32,7 @@ struct Input_Data
 enum Program_State
 {
     NORMAL,
+    COMMAND,
     SAVE,
     LOAD,
     RECORDING,
@@ -109,6 +110,7 @@ int main(void)
         bool pressed = is_down && !was_down;
 
         bool normal_press = pressed && kd.vkCode == VK_ESCAPE;
+        bool command_press = pressed && kd.vkCode == VK_F8;
         bool save_press = pressed && kd.vkCode == 'S';
         bool load_press = pressed && kd.vkCode == 'L';
         bool record_press = pressed && kd.vkCode == 'R';
@@ -131,27 +133,40 @@ int main(void)
         {
             case NORMAL:
             {
-                if (save_press)
+                if (command_press)
+                {
+                    program_state = COMMAND;
+                    printf("command\n");
+                }
+            } break;
+            case COMMAND:
+            {
+                if (normal_press)
+                {
+                    program_state = NORMAL;
+                    printf("normal\n");
+                }
+                else if (save_press)
                 {
                     program_state = SAVE;
-                    printf("save on\n");
+                    printf("save\n");
                 }
                 else if (load_press)
                 {
                     program_state = LOAD;
-                    printf("load on\n");
+                    printf("load\n");
                 }
                 else if (record_press)
                 {
                     program_state = RECORDING;
                     memset(temp_input.data, 0, sizeof(temp_input.data));
                     temp_input.count = 0;
-                    printf("recording on\n");
+                    printf("recording\n");
                 }
                 else if (play_press)
                 {
                     program_state = PLAYING;
-                    printf("playing on\n");
+                    printf("playing\n");
                     i = 0;
                 }
             } break;
@@ -160,13 +175,15 @@ int main(void)
                 if (normal_press)
                 {
                     program_state = NORMAL;   
-                    printf("save off\n");
+                    printf("normal\n");
                 } 
                 else if (pressed)
                 {
                     if (kd.vkCode >= '0' && kd.vkCode <= '9')
                     {
-                        inputs[kd.vkCode - '0'] = temp_input;
+                        u32 slot = kd.vkCode - '0'; 
+                        inputs[slot] = temp_input;
+                        printf("saved to slot %u\n", slot);
                     }
                     else
                     {
@@ -180,13 +197,15 @@ int main(void)
                 if (normal_press)
                 {
                     program_state = NORMAL;
-                    printf("load off\n");
+                    printf("normal\n");
                 }
                 else if (pressed)
                 {
                     if (kd.vkCode >= '0' && kd.vkCode <= '9')
                     {
-                        temp_input = inputs[kd.vkCode - '0'];
+                        u32 slot = kd.vkCode - '0'; 
+                        temp_input = inputs[slot];
+                        printf("loaded from slot %u\n", slot);
                     }
                     else
                     {
@@ -199,7 +218,7 @@ int main(void)
                 if (normal_press)
                 {
                     program_state = NORMAL;
-                    printf("recording off\n");
+                    printf("normal\n");
                     break;
                 }
 
@@ -221,7 +240,7 @@ int main(void)
                 if (normal_press)
                 {
                     program_state = NORMAL;
-                    printf("playing off\n");
+                    printf("normal\n");
                     break;
                 }
 
