@@ -111,8 +111,8 @@ int main(void)
         bool normal_press = pressed && kd.vkCode == VK_ESCAPE;
         bool save_press = pressed && kd.vkCode == 'S';
         bool load_press = pressed && kd.vkCode == 'L';
-        bool record_press = pressed && kd.vkCode == VK_LMENU;
-        bool play_press = pressed && kd.vkCode == VK_RMENU;
+        bool record_press = pressed && kd.vkCode == 'R';
+        bool play_press = pressed && kd.vkCode == 'P';
 
 
         // if (changed)
